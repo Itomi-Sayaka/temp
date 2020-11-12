@@ -33,11 +33,10 @@ singletonBS :: Int -> BitSet
 singletonBS (I# i#) = BitSet (I# (uncheckedIShiftL# 1# i#))
 
 insertBS :: Int -> BitSet -> BitSet
-insertBS (I# i#) (BitSet (I# bs#)) = BitSet (I# ((uncheckedIShiftL# 1# i#) `orI#` bs#))
+insertBS (I# i#) (BitSet (I# bs#)) = BitSet (I# (uncheckedIShiftL# 1# i# `orI#` bs#))
 
 deleteBS :: Int -> BitSet -> BitSet
-deleteBS (I# i#) (BitSet (I# bs#))
-    = BitSet (I# (notI# (uncheckedIShiftL# 1# i#) `andI#` bs#))
+deleteBS (I# i#) (BitSet (I# bs#)) = BitSet (I# (notI# (uncheckedIShiftL# 1# i#) `andI#` bs#))
 
 memberBS :: Int -> BitSet -> Bool
 memberBS (I# i#) (BitSet (I# bs#)) = isTrue# (uncheckedIShiftRL# bs# i# `andI#` 1#)
