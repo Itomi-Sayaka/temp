@@ -18,6 +18,14 @@ test = do
   print $ convolute xs ys AND
   print $ convolute xs ys OR
   print $ convolute xs ys XOR
+  
+test2 :: IO ()
+test2 = do
+  let
+    xs = VU.fromList ([1,0,0,1,0,1,0,1] :: [Int])
+    ys = VU.fromList ([1,0,1,0,0,1,1,0] :: [Int])
+  print $ walshSpectre xs
+  print $ walshSpectre ys
 
 data Kinds = AND | OR | XOR
   deriving Eq
