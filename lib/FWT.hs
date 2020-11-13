@@ -48,6 +48,9 @@ convoluteOR xs ys =
   in
     fwt zs' True False False
 
+walshSpectre :: VU.Vector Int ->　VU.Vector Int
+walshSpectre vec = fwt vec False False True
+
 convoluteXOR :: VU.Vector Int -> VU.Vector Int -> VU.Vector Int
 convoluteXOR xs ys =
   let
