@@ -34,9 +34,8 @@ convoluteAND xs ys =
     xs' = fwt xs False True False
     ys' = fwt ys False True False
     zs' = VU.zipWith (*) xs' ys'
-    zs  = fwt zs' True True False
   in
-    VU.take m zs
+    VU.take m $ fwt zs' True True False
   where
     !m = min (VU.length xs) (VU.length ys)
 
@@ -46,11 +45,8 @@ convoluteOR xs ys =
     xs' = fwt xs False False False
     ys' = fwt ys False False False
     zs' = VU.zipWith (*) xs' ys'
-    zs  = fwt zs' True False False
   in
-    VU.take m zs
-  where
-    !m = min (VU.length xs) (VU.length ys)
+    fwt zs' True False False
 
 convoluteXOR :: VU.Vector Int -> VU.Vector Int -> VU.Vector Int
 convoluteXOR xs ys =
@@ -58,11 +54,9 @@ convoluteXOR xs ys =
     xs' = fwt xs False False True
     ys' = fwt ys False False True
     zs' = VU.zipWith (*) xs' ys'
-    zs  = fwt zs' True False True
   in
-    VU.take m zs
-  where
-    !m = max (VU.length xs) (VU.length ys)
+    fwt zs' True False True
+
 -- 高速アダマール変換
 -- inv: 順変換ならFalse 逆変換ならTrue
 -- isAND: and もしくは or による畳み込み AndならTrue OrならFalse
