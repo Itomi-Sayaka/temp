@@ -20,11 +20,11 @@ fwt f' inv isAND isXOR = VU.create $ do
         itemY <- VUM.unsafeRead g (j .|. i)
         if inv
           then do
-            VUM.unsafeWrite g j (itemX + itemY)
-            VUM.unsafeWrite g (j .|. i) (itemX - itemY)
-          else do
             VUM.unsafeWrite g j ((itemX + itemY) `div` 2)
             VUM.unsafeWrite g (j .|. i) ((itemX - itemY) `div` 2)
+          else do
+            VUM.unsafeWrite g j (itemX + itemY)
+            VUM.unsafeWrite g (j .|. i) (itemX - itemY)
       else do
         if isAND
           then do
