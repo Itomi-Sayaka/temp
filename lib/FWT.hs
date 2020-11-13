@@ -10,6 +10,63 @@ import qualified Data.Vector.Fusion.Stream.Monadic as VFSM
 import qualified Data.Vector.Unboxed               as VU
 import qualified Data.Vector.Unboxed.Mutable       as VUM
 
+test :: IO ()
+test = do
+  let
+    xs = VU.fromList ([4, 7, 11, 54, 23] :: [Int])
+    ys = VU.fromList ([45, 23, 14, 38, 21, 45] :: [Int])
+  print $ convolute xs ys AND
+  print $ convolute xs ys OR
+  print $ convolute xs ys XOR
+
+data Kinds = AND | OR | XOR | FFT | NTT | ArbitraryNTT
+  deriving Eq
+
+convolute :: VU.Vector Int -> VU.Vector Int -> Kinds -> VU.Vector Int
+convolute xs ys k
+  | k == AND = convoluteAND xs ys
+  | k == OR  = convoluteOR xs ys
+  | otherwise = convoluteXOR xs ys
+
+convoluteAND :: VU.Vector Int -> VU.Vector Int -> VU.Vector Int
+convoluteAND xs ys =
+  let
+    xs' = fwt xs False True False
+    ys' = fwt ys False True False
+    zs' = VU.zipWith (*) xs' ys'
+    zs  = fwt zs' True True False
+  in
+    VU.take m zs
+  where
+    !m = min (VU.length xs) (VU.length ys)
+
+convoluteOR :: VU.Vector Int -> VU.Vector Int -> VU.Vector Int
+convoluteOR xs ys =
+  let
+    xs' = fwt xs False False False
+    ys' = fwt ys False False False
+    zs' = VU.zipWith (*) xs' ys'
+    zs  = fwt zs' True False False
+  in
+    VU.take m zs
+  where
+    !m = min (VU.length xs) (VU.length ys)
+
+convoluteXOR :: VU.Vector Int -> VU.Vector Int -> VU.Vector Int
+convoluteXOR xs ys =
+  let
+    xs' = fwt xs False False True
+    ys' = fwt ys False False True
+    zs' = VU.zipWith (*) xs' ys'
+    zs  = fwt zs' True False True
+  in
+    VU.take m zs
+  where
+    !m = max (VU.length xs) (VU.length ys)
+-- 高速アダマール変換
+-- inv: 順変換ならFalse 逆変換ならTrue
+-- isAND: and もしくは or による畳み込み AndならTrue OrならFalse
+-- isXOR: xor畳み込みならTrue
 fwt :: VU.Vector Int -> Bool -> Bool -> Bool -> VU.Vector Int
 fwt f' inv isAND isXOR = VU.create $ do
   g <- VU.unsafeThaw f
