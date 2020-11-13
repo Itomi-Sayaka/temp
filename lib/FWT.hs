@@ -19,7 +19,7 @@ test = do
   print $ convolute xs ys OR
   print $ convolute xs ys XOR
 
-data Kinds = AND | OR | XOR | FFT | NTT | ArbitraryNTT
+data Kinds = AND | OR | XOR
   deriving Eq
 
 convolute :: VU.Vector Int -> VU.Vector Int -> Kinds -> VU.Vector Int
