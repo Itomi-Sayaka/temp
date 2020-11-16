@@ -37,9 +37,9 @@ rep1' n = flip VFSM.mapM_ (stream 1 n 1)
 {-# INLINE rep1' #-}
 
 -- | l <= x <= r, interval = d
-for :: Monad m => Int -> Int -> Int -> (Int -> m ()) -> m ()
-for l r d = flip VFSM.mapM_ (stream l r d)
-{-# INLINE for #-}
+for_ :: Monad m => Int -> Int -> Int -> (Int -> m ()) -> m ()
+for_ l r d = flip VFSM.mapM_ (stream l r d)
+{-# INLINE for_ #-}
 
 -- | r -> x -> l, -d
 streamR :: Monad m => Int -> Int -> Int -> VFSM.Stream m Int
